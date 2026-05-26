@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
+  output: 'export',
+  basePath: process.env.BASE_PATH || '',
   typescript: {
     ignoreBuildErrors: true,
   },
