@@ -1,4 +1,4 @@
-# MicroGestão
+# MicroManager
 
 Sistema de gestão para microempreendedores alinhado com ODS 9 da ONU.
 
