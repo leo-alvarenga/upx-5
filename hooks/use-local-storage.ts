@@ -61,6 +61,25 @@ export function useLocalStorage() {
     });
   }, []);
 
+  const updateProduct = useCallback(
+    (id: string, data: Omit<Product, "id" | "qtdVendida" | "qtdEstoque">) => {
+      setProducts((prev) => {
+        const updated = prev.map((p) => (p.id === id ? { ...p, ...data } : p));
+        localStorage.setItem(PRODUCTS_KEY, JSON.stringify(updated));
+        return updated;
+      });
+    },
+    [],
+  );
+
+  const deleteProduct = useCallback((id: string) => {
+    setProducts((prev) => {
+      const updated = prev.filter((p) => p.id !== id);
+      localStorage.setItem(PRODUCTS_KEY, JSON.stringify(updated));
+      return updated;
+    });
+  }, []);
+
   const addCustomer = useCallback((customer: Omit<Customer, "id">) => {
     const newCustomer: Customer = {
       ...customer,
@@ -73,12 +92,32 @@ export function useLocalStorage() {
     });
   }, []);
 
+  const updateCustomer = useCallback((id: string, data: Omit<Customer, "id">) => {
+    setCustomers((prev) => {
+      const updated = prev.map((c) => (c.id === id ? { ...c, ...data } : c));
+      localStorage.setItem(CUSTOMERS_KEY, JSON.stringify(updated));
+      return updated;
+    });
+  }, []);
+
+  const deleteCustomer = useCallback((id: string) => {
+    setCustomers((prev) => {
+      const updated = prev.filter((c) => c.id !== id);
+      localStorage.setItem(CUSTOMERS_KEY, JSON.stringify(updated));
+      return updated;
+    });
+  }, []);
+
   return {
     products,
     customers,
     isLoaded,
     addProduct,
     updateProductStock,
+    updateProduct,
+    deleteProduct,
     addCustomer,
+    updateCustomer,
+    deleteCustomer,
   };
 }

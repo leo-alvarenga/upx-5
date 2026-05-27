@@ -11,8 +11,8 @@ import { useLocalStorage } from '@/hooks/use-local-storage'
 import type { ViewType } from '@/lib/types'
 
 export default function HomePage() {
-  const [currentView, setCurrentView] = useState<ViewType>('cadastrar-produto')
-  const { products, customers, isLoaded, addProduct, updateProductStock, addCustomer } = useLocalStorage()
+  const [currentView, setCurrentView] = useState<ViewType>('gerenciar-estoque')
+  const { products, customers, isLoaded, addProduct, updateProductStock, updateProduct, deleteProduct, addCustomer, updateCustomer, deleteCustomer } = useLocalStorage()
 
   const renderContent = () => {
     if (!isLoaded) {
@@ -29,9 +29,9 @@ export default function HomePage() {
       case 'cadastrar-cliente':
         return <CustomerForm onSubmit={addCustomer} />
       case 'produtos':
-        return <ProductsTable products={products} />
+        return <ProductsTable products={products} onUpdateProduct={updateProduct} onDeleteProduct={deleteProduct} />
       case 'clientes':
-        return <CustomersTable customers={customers} />
+        return <CustomersTable customers={customers} onUpdateCustomer={updateCustomer} onDeleteCustomer={deleteCustomer} />
       case 'gerenciar-estoque':
         return <StockTable products={products} onUpdateStock={updateProductStock} />
       default:

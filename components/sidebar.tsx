@@ -10,11 +10,11 @@ interface SidebarProps {
 }
 
 const navItems: { view: ViewType; label: string; icon: React.ElementType }[] = [
-  { view: 'cadastrar-produto', label: 'Cadastrar Produto', icon: Package },
-  { view: 'cadastrar-cliente', label: 'Cadastrar Cliente', icon: UserPlus },
-  { view: 'produtos', label: 'Produtos', icon: ShoppingBag },
   { view: 'gerenciar-estoque', label: 'Gerenciar Estoque', icon: Warehouse },
+  { view: 'produtos', label: 'Produtos', icon: ShoppingBag },
+  { view: 'cadastrar-produto', label: 'Cadastrar Produto', icon: Package },
   { view: 'clientes', label: 'Clientes', icon: Users },
+  { view: 'cadastrar-cliente', label: 'Cadastrar Cliente', icon: UserPlus },
 ]
 
 export function Sidebar({ currentView, onViewChange }: SidebarProps) {
