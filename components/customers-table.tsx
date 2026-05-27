@@ -17,6 +17,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import { Pencil, Check, X, Trash2 } from 'lucide-react'
+import { useText } from '@/hooks/use-text'
 import type { Customer } from '@/lib/types'
 
 interface CustomersTableProps {
@@ -26,6 +27,7 @@ interface CustomersTableProps {
 }
 
 export function CustomersTable({ customers, onUpdateCustomer, onDeleteCustomer }: CustomersTableProps) {
+  const { t } = useText()
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editData, setEditData] = useState<Omit<Customer, 'id'>>({
     nome: '',
@@ -64,25 +66,25 @@ export function CustomersTable({ customers, onUpdateCustomer, onDeleteCustomer }
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Clientes Cadastrados</CardTitle>
+        <CardTitle>{t('card.customers.title')}</CardTitle>
         <CardDescription>
-          Lista de todos os clientes registrados no sistema
+          {t('card.customers.description')}
         </CardDescription>
       </CardHeader>
       <CardContent>
         {customers.length === 0 ? (
           <p className="text-center text-muted-foreground py-8">
-            Nenhum cliente cadastrado ainda.
+            {t('message.noCustomers')}
           </p>
         ) : (
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Nome</TableHead>
-                <TableHead>CPF/CNPJ</TableHead>
-                <TableHead>Telefone</TableHead>
-                <TableHead>Endereço</TableHead>
-                <TableHead className="text-right">Ações</TableHead>
+                <TableHead>{t('customer.name')}</TableHead>
+                <TableHead>{t('customer.cpfCnpj')}</TableHead>
+                <TableHead>{t('customer.phone')}</TableHead>
+                <TableHead>{t('customer.address')}</TableHead>
+                <TableHead className="text-right">{t('common.actions')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -140,7 +142,7 @@ export function CustomersTable({ customers, onUpdateCustomer, onDeleteCustomer }
                           size="icon-sm"
                           variant="ghost"
                           onClick={() => handleSave(customer.id)}
-                          aria-label="Salvar"
+                          aria-label={t('actions.save')}
                         >
                           <Check className="h-4 w-4 text-green-600" />
                         </Button>
@@ -148,7 +150,7 @@ export function CustomersTable({ customers, onUpdateCustomer, onDeleteCustomer }
                           size="icon-sm"
                           variant="ghost"
                           onClick={handleCancel}
-                          aria-label="Cancelar"
+                          aria-label={t('actions.cancel')}
                         >
                           <X className="h-4 w-4 text-red-600" />
                         </Button>
@@ -161,7 +163,7 @@ export function CustomersTable({ customers, onUpdateCustomer, onDeleteCustomer }
                           onClick={() => handleEdit(customer)}
                         >
                           <Pencil className="h-4 w-4 mr-1" />
-                          Editar
+                          {t('actions.edit')}
                         </Button>
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
@@ -171,23 +173,23 @@ export function CustomersTable({ customers, onUpdateCustomer, onDeleteCustomer }
                               className="text-red-600 hover:text-red-700 hover:bg-red-50"
                             >
                               <Trash2 className="h-4 w-4 mr-1" />
-                              Remover
+                              {t('actions.remove')}
                             </Button>
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>
-                              <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
+                              <AlertDialogTitle>{t('message.confirmDelete')}</AlertDialogTitle>
                               <AlertDialogDescription>
-                                Tem certeza que deseja remover o cliente <strong>{customer.nome}</strong>? Esta ação não pode ser desfeita.
+                                {t('message.confirmDeleteCustomerFull', { name: customer.nome })}
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                              <AlertDialogCancel>{t('actions.cancel')}</AlertDialogCancel>
                               <AlertDialogAction
                                 onClick={() => handleDelete(customer.id)}
                                 className="bg-red-600 hover:bg-red-700"
                               >
-                                Confirmar
+                                {t('actions.confirm')}
                               </AlertDialogAction>
                             </AlertDialogFooter>
                           </AlertDialogContent>

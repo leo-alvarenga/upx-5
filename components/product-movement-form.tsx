@@ -29,6 +29,7 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Plus, Trash2, Check, ChevronsUpDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useText } from '@/hooks/use-text'
 import type { Product, Customer, ProductMovement, MovementType, ProductMovementItem } from '@/lib/types'
 
 interface ProductMovementFormProps {
@@ -38,6 +39,7 @@ interface ProductMovementFormProps {
 }
 
 export function ProductMovementForm({ products, customers, onSubmit }: ProductMovementFormProps) {
+  const { t } = useText()
   const [tipo, setTipo] = useState<MovementType>('venda')
   const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(null)
   const [customerOpen, setCustomerOpen] = useState(false)
@@ -65,18 +67,18 @@ export function ProductMovementForm({ products, customers, onSubmit }: ProductMo
     // Verificar se já existe na lista
     const existingIndex = items.findIndex((i) => i.productId === selectedProduct.id)
     if (existingIndex !== -1) {
-      setError('Este produto já foi adicionado. Remova-o primeiro para alterar a quantidade.')
+      setError(t('error.productAlreadyAdded'))
       return
     }
 
     // Verificar estoque para saídas
     if (isStockOut && quantidade > selectedProduct.qtdEstoque) {
-      setError(`Estoque insuficiente. Disponível: ${selectedProduct.qtdEstoque}`)
+      setError(t('error.insufficientStock', { available: selectedProduct.qtdEstoque.toString() }))
       return
     }
 
     if (quantidade <= 0) {
-      setError('A quantidade deve ser maior que zero.')
+      setError(t('error.quantityMustBePositive'))
       return
     }
 
@@ -102,12 +104,12 @@ export function ProductMovementForm({ products, customers, onSubmit }: ProductMo
     setError(null)
 
     if (items.length === 0) {
-      setError('Adicione pelo menos um produto.')
+      setError(t('error.addAtLeastOneProduct'))
       return
     }
 
     if (requiresCustomer && !selectedCustomerId) {
-      setError('Selecione um cliente para este tipo de movimentação.')
+      setError(t('error.selectCustomer'))
       return
     }
 
@@ -136,25 +138,25 @@ export function ProductMovementForm({ products, customers, onSubmit }: ProductMo
   return (
     <Card className="max-w-3xl">
       <CardHeader>
-        <CardTitle>Registrar Saída ou Entrada</CardTitle>
+        <CardTitle>{t('card.movement.title')}</CardTitle>
         <CardDescription>
-          Registre vendas, devoluções, entradas de estoque ou outras movimentações
+          {t('card.movement.description')}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Tipo de Movimento */}
           <div className="space-y-2">
-            <Label>Tipo de Movimento</Label>
+            <Label>{t('movement.type')}</Label>
             <Select value={tipo} onValueChange={(value) => setTipo(value as MovementType)}>
               <SelectTrigger className="w-full">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="venda">Venda</SelectItem>
-                <SelectItem value="devolucao">Devolução</SelectItem>
-                <SelectItem value="entrada">Entrada</SelectItem>
-                <SelectItem value="outro">Outro</SelectItem>
+                <SelectItem value="venda">{t('movement.sale')}</SelectItem>
+                <SelectItem value="devolucao">{t('movement.return')}</SelectItem>
+                <SelectItem value="entrada">{t('movement.entry')}</SelectItem>
+                <SelectItem value="outro">{t('movement.other')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -162,7 +164,7 @@ export function ProductMovementForm({ products, customers, onSubmit }: ProductMo
           {/* Cliente (apenas para venda/devolução) */}
           {requiresCustomer && (
             <div className="space-y-2">
-              <Label>Cliente</Label>
+              <Label>{t('customer.label')}</Label>
               <Popover open={customerOpen} onOpenChange={setCustomerOpen}>
                 <PopoverTrigger asChild>
                   <Button
@@ -171,15 +173,15 @@ export function ProductMovementForm({ products, customers, onSubmit }: ProductMo
                     aria-expanded={customerOpen}
                     className="w-full justify-between"
                   >
-                    {selectedCustomer ? selectedCustomer.nome : 'Buscar cliente...'}
+                    {selectedCustomer ? selectedCustomer.nome : t('search.customer')}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-full p-0" align="start">
                   <Command>
-                    <CommandInput placeholder="Buscar cliente..." />
+                    <CommandInput placeholder={t('search.customer')} />
                     <CommandList>
-                      <CommandEmpty>Nenhum cliente encontrado.</CommandEmpty>
+                      <CommandEmpty>{t('search.noCustomerFound')}</CommandEmpty>
                       <CommandGroup>
                         {customers.map((customer) => (
                           <CommandItem
@@ -212,7 +214,7 @@ export function ProductMovementForm({ products, customers, onSubmit }: ProductMo
 
           {/* Adicionar Produto */}
           <div className="space-y-2">
-            <Label>Adicionar Produto</Label>
+            <Label>{t('movement.addProduct')}</Label>
             <div className="flex gap-2">
               <Popover open={productOpen} onOpenChange={setProductOpen}>
                 <PopoverTrigger asChild>
@@ -222,15 +224,15 @@ export function ProductMovementForm({ products, customers, onSubmit }: ProductMo
                     aria-expanded={productOpen}
                     className="flex-1 justify-between"
                   >
-                    {selectedProduct ? selectedProduct.nome : 'Buscar produto...'}
+                    {selectedProduct ? selectedProduct.nome : t('search.product')}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-full p-0" align="start">
                   <Command>
-                    <CommandInput placeholder="Buscar produto..." />
+                    <CommandInput placeholder={t('search.product')} />
                     <CommandList>
-                      <CommandEmpty>Nenhum produto encontrado.</CommandEmpty>
+                      <CommandEmpty>{t('search.noProductFound')}</CommandEmpty>
                       <CommandGroup>
                         {products.map((product) => (
                           <CommandItem
@@ -249,7 +251,7 @@ export function ProductMovementForm({ products, customers, onSubmit }: ProductMo
                             />
                             {product.nome}
                             <span className="ml-2 text-muted-foreground text-xs">
-                              (Estoque: {product.qtdEstoque})
+                              {t('product.stockLabel', { quantity: product.qtdEstoque.toString() })}
                             </span>
                           </CommandItem>
                         ))}
@@ -264,7 +266,7 @@ export function ProductMovementForm({ products, customers, onSubmit }: ProductMo
                 value={quantidade}
                 onChange={(e) => setQuantidade(parseInt(e.target.value) || 1)}
                 className="w-24"
-                placeholder="Qtd"
+                placeholder={t('common.quantity')}
               />
               <Button
                 type="button"
@@ -273,7 +275,7 @@ export function ProductMovementForm({ products, customers, onSubmit }: ProductMo
                 disabled={!selectedProduct}
               >
                 <Plus className="h-4 w-4 mr-1" />
-                Adicionar
+                {t('actions.add')}
               </Button>
             </div>
           </div>
@@ -281,15 +283,15 @@ export function ProductMovementForm({ products, customers, onSubmit }: ProductMo
           {/* Lista de Produtos Adicionados */}
           {items.length > 0 && (
             <div className="space-y-2">
-              <Label>Produtos adicionados</Label>
+              <Label>{t('movement.addedProducts')}</Label>
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Produto</TableHead>
-                    <TableHead className="text-right">Qtd</TableHead>
-                    <TableHead className="text-right">Preço Unit.</TableHead>
-                    <TableHead className="text-right">Subtotal</TableHead>
-                    <TableHead className="text-right">Ações</TableHead>
+                    <TableHead>{t('common.product')}</TableHead>
+                    <TableHead className="text-right">{t('common.quantity')}</TableHead>
+                    <TableHead className="text-right">{t('movement.unitPrice')}</TableHead>
+                    <TableHead className="text-right">{t('movement.subtotal')}</TableHead>
+                    <TableHead className="text-right">{t('common.actions')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -310,6 +312,7 @@ export function ProductMovementForm({ products, customers, onSubmit }: ProductMo
                           variant="ghost"
                           onClick={() => handleRemoveProduct(item.productId)}
                           className="text-red-600 hover:text-red-700"
+                          aria-label={t('actions.remove')}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -320,7 +323,7 @@ export function ProductMovementForm({ products, customers, onSubmit }: ProductMo
               </Table>
               {(tipo === 'venda' || tipo === 'devolucao') && (
                 <div className="flex justify-end text-sm pt-2">
-                  <span className="text-muted-foreground">Total:</span>
+                  <span className="text-muted-foreground">{t('common.total')}</span>
                   <span className="ml-2 font-semibold">{formatCurrency(total)}</span>
                 </div>
               )}
@@ -329,10 +332,10 @@ export function ProductMovementForm({ products, customers, onSubmit }: ProductMo
 
           {/* Observação */}
           <div className="space-y-2">
-            <Label htmlFor="observacao">Observação (opcional)</Label>
+            <Label htmlFor="observacao">{t('movement.observationOptional')}</Label>
             <Textarea
               id="observacao"
-              placeholder="Adicione uma observação sobre esta movimentação..."
+              placeholder={t('movement.observationPlaceholder')}
               value={observacao}
               onChange={(e) => setObservacao(e.target.value)}
               rows={3}
@@ -347,10 +350,10 @@ export function ProductMovementForm({ products, customers, onSubmit }: ProductMo
           {/* Botão de Submit */}
           <div className="flex items-center gap-4 pt-2">
             <Button type="submit" disabled={items.length === 0}>
-              Registrar Movimento
+              {t('actions.registerMovement')}
             </Button>
             {success && (
-              <span className="text-sm text-green-600">Movimentação registrada com sucesso!</span>
+              <span className="text-sm text-green-600">{t('message.movementSuccess')}</span>
             )}
           </div>
         </form>

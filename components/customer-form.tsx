@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
+import { useText } from '@/hooks/use-text'
 import type { Customer } from '@/lib/types'
 
 interface CustomerFormProps {
@@ -12,6 +13,7 @@ interface CustomerFormProps {
 }
 
 export function CustomerForm({ onSubmit }: CustomerFormProps) {
+  const { t } = useText()
   const [formData, setFormData] = useState({
     nome: '',
     cpfCnpj: '',
@@ -39,57 +41,57 @@ export function CustomerForm({ onSubmit }: CustomerFormProps) {
   return (
     <Card className="max-w-xl">
       <CardHeader>
-        <CardTitle>Cadastrar Novo Cliente</CardTitle>
+        <CardTitle>{t('card.registerCustomer.title')}</CardTitle>
         <CardDescription>
-          Preencha os dados do cliente para adicioná-lo ao sistema
+          {t('card.registerCustomer.description')}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="nome">Nome Completo / Razão Social</Label>
+            <Label htmlFor="nome">{t('customer.fullName')}</Label>
             <Input
               id="nome"
-              placeholder="Ex: Maria Silva"
+              placeholder={t('customer.namePlaceholder')}
               value={formData.nome}
               onChange={(e) => setFormData(prev => ({ ...prev, nome: e.target.value }))}
               required
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="cpfCnpj">CPF / CNPJ</Label>
+            <Label htmlFor="cpfCnpj">{t('customer.cpfCnpj')}</Label>
             <Input
               id="cpfCnpj"
-              placeholder="Ex: 123.456.789-00"
+              placeholder={t('customer.cpfCnpjPlaceholder')}
               value={formData.cpfCnpj}
               onChange={(e) => setFormData(prev => ({ ...prev, cpfCnpj: e.target.value }))}
               required
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="telefone">Telefone</Label>
+            <Label htmlFor="telefone">{t('customer.phone')}</Label>
             <Input
               id="telefone"
-              placeholder="Ex: (11) 99999-1234"
+              placeholder={t('customer.phonePlaceholder')}
               value={formData.telefone}
               onChange={(e) => setFormData(prev => ({ ...prev, telefone: e.target.value }))}
               required
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="endereco">Endereço</Label>
+            <Label htmlFor="endereco">{t('customer.address')}</Label>
             <Input
               id="endereco"
-              placeholder="Ex: Rua das Flores, 123 - São Paulo, SP"
+              placeholder={t('customer.addressPlaceholder')}
               value={formData.endereco}
               onChange={(e) => setFormData(prev => ({ ...prev, endereco: e.target.value }))}
               required
             />
           </div>
           <div className="flex items-center gap-4 pt-2">
-            <Button type="submit">Cadastrar Cliente</Button>
+            <Button type="submit">{t('actions.registerCustomer')}</Button>
             {success && (
-              <span className="text-sm text-green-600">Cliente cadastrado com sucesso!</span>
+              <span className="text-sm text-green-600">{t('message.customerSuccess')}</span>
             )}
           </div>
         </form>

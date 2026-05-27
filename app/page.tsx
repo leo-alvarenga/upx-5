@@ -10,9 +10,11 @@ import { StockTable } from '@/components/stock-table'
 import { ProductMovementForm } from '@/components/product-movement-form'
 import { ProductMovementHistory } from '@/components/product-movement-history'
 import { useLocalStorage } from '@/hooks/use-local-storage'
+import { useText } from '@/hooks/use-text'
 import type { ViewType } from '@/lib/types'
 
 export default function HomePage() {
+  const { t } = useText()
   const [currentView, setCurrentView] = useState<ViewType>('registrar-saida-entrada')
   const {
     products,
@@ -33,7 +35,7 @@ export default function HomePage() {
     if (!isLoaded) {
       return (
         <div className="flex items-center justify-center h-64">
-          <p className="text-muted-foreground">Carregando...</p>
+          <p className="text-muted-foreground">{t('common.loading')}</p>
         </div>
       )
     }
@@ -79,19 +81,19 @@ export default function HomePage() {
   const getPageTitle = () => {
     switch (currentView) {
       case 'registrar-saida-entrada':
-        return 'Registrar Saída ou Entrada'
+        return t('nav.registerMovement')
       case 'historico-movimentos':
-        return 'Histórico de Movimentos'
+        return t('nav.movementHistory')
       case 'cadastrar-produto':
-        return 'Cadastrar Produto'
+        return t('nav.registerProduct')
       case 'cadastrar-cliente':
-        return 'Cadastrar Cliente'
+        return t('nav.registerCustomer')
       case 'produtos':
-        return 'Produtos'
+        return t('nav.products')
       case 'clientes':
-        return 'Clientes'
+        return t('nav.customers')
       case 'gerenciar-estoque':
-        return 'Gerenciar Estoque'
+        return t('nav.manageStock')
       default:
         return ''
     }

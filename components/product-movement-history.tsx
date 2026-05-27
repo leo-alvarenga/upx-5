@@ -13,23 +13,25 @@ import {
 } from '@/components/ui/select'
 import { Eye } from 'lucide-react'
 import { ProductMovementDetailModal } from '@/components/product-movement-detail-modal'
+import { useText } from '@/hooks/use-text'
 import type { ProductMovement, MovementType } from '@/lib/types'
 
 interface ProductMovementHistoryProps {
   movements: ProductMovement[]
 }
 
-const movementTypeLabels: Record<MovementType, string> = {
-  venda: 'Venda',
-  devolucao: 'Devolução',
-  entrada: 'Entrada',
-  outro: 'Outro',
-}
-
 export function ProductMovementHistory({ movements }: ProductMovementHistoryProps) {
+  const { t } = useText()
   const [filterType, setFilterType] = useState<MovementType | 'todos'>('todos')
   const [selectedMovement, setSelectedMovement] = useState<ProductMovement | null>(null)
   const [modalOpen, setModalOpen] = useState(false)
+
+  const movementTypeLabels: Record<MovementType, string> = {
+    venda: t('movement.sale'),
+    devolucao: t('movement.return'),
+    entrada: t('movement.entry'),
+    outro: t('movement.other'),
+  }
 
   const filteredMovements = filterType === 'todos'
     ? movements
@@ -58,7 +60,7 @@ export function ProductMovementHistory({ movements }: ProductMovementHistoryProp
 
   const getTotalItems = (movement: ProductMovement) => {
     const total = movement.items.reduce((acc, item) => acc + item.quantidade, 0)
-    return total === 1 ? '1 item' : `${total} itens`
+    return t('common.items', { count: total })
   }
 
   const handleViewDetails = (movement: ProductMovement) => {
@@ -75,9 +77,9 @@ export function ProductMovementHistory({ movements }: ProductMovementHistoryProp
     <>
       <Card>
         <CardHeader>
-          <CardTitle>Histórico de Movimentos</CardTitle>
+          <CardTitle>{t('card.movementHistory.title')}</CardTitle>
           <CardDescription>
-            Visualize todas as entradas e saídas de produtos registradas
+            {t('card.movementHistory.description')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -87,32 +89,32 @@ export function ProductMovementHistory({ movements }: ProductMovementHistoryProp
               onValueChange={(value) => setFilterType(value as MovementType | 'todos')}
             >
               <SelectTrigger className="w-48">
-                <SelectValue placeholder="Filtrar por tipo" />
+                <SelectValue placeholder={t('movement.filterByType')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="todos">Todos</SelectItem>
-                <SelectItem value="venda">Venda</SelectItem>
-                <SelectItem value="devolucao">Devolução</SelectItem>
-                <SelectItem value="entrada">Entrada</SelectItem>
-                <SelectItem value="outro">Outro</SelectItem>
+                <SelectItem value="todos">{t('movement.all')}</SelectItem>
+                <SelectItem value="venda">{t('movement.sale')}</SelectItem>
+                <SelectItem value="devolucao">{t('movement.return')}</SelectItem>
+                <SelectItem value="entrada">{t('movement.entry')}</SelectItem>
+                <SelectItem value="outro">{t('movement.other')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           {filteredMovements.length === 0 ? (
             <p className="text-center text-muted-foreground py-8">
-              Nenhuma movimentação registrada ainda.
+              {t('message.noMovements')}
             </p>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Data</TableHead>
-                  <TableHead>Tipo</TableHead>
-                  <TableHead>Cliente</TableHead>
-                  <TableHead>Itens</TableHead>
-                  <TableHead className="text-right">Total</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
+                  <TableHead>{t('common.date')}</TableHead>
+                  <TableHead>{t('common.type')}</TableHead>
+                  <TableHead>{t('customer.label')}</TableHead>
+                  <TableHead>{t('common.items')}</TableHead>
+                  <TableHead className="text-right">{t('common.total')}</TableHead>
+                  <TableHead className="text-right">{t('common.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -134,7 +136,7 @@ export function ProductMovementHistory({ movements }: ProductMovementHistoryProp
                           onClick={() => handleViewDetails(movement)}
                         >
                           <Eye className="h-4 w-4 mr-1" />
-                          Ver
+                          {t('common.view')}
                         </Button>
                       </TableCell>
                     </TableRow>

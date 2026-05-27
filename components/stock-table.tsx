@@ -6,6 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Pencil, Check, X } from 'lucide-react'
+import { useText } from '@/hooks/use-text'
 import type { Product } from '@/lib/types'
 
 interface StockTableProps {
@@ -14,6 +15,7 @@ interface StockTableProps {
 }
 
 export function StockTable({ products, onUpdateStock }: StockTableProps) {
+  const { t } = useText()
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editValue, setEditValue] = useState('')
 
@@ -39,25 +41,25 @@ export function StockTable({ products, onUpdateStock }: StockTableProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Gerenciar Estoque</CardTitle>
+        <CardTitle>{t('card.stock.title')}</CardTitle>
         <CardDescription>
-          Visualize e ajuste as quantidades em estoque de seus produtos
+          {t('card.stock.description')}
         </CardDescription>
       </CardHeader>
       <CardContent>
         {products.length === 0 ? (
           <p className="text-center text-muted-foreground py-8">
-            Nenhum produto cadastrado ainda.
+            {t('message.noProducts')}
           </p>
         ) : (
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Nome</TableHead>
-                <TableHead>Marca</TableHead>
-                <TableHead>Fornecedor</TableHead>
-                <TableHead className="text-right">Qtd Estoque</TableHead>
-                <TableHead className="text-right">Ações</TableHead>
+                <TableHead>{t('product.name')}</TableHead>
+                <TableHead>{t('product.brand')}</TableHead>
+                <TableHead>{t('product.supplier')}</TableHead>
+                <TableHead className="text-right">{t('product.stockQuantity')}</TableHead>
+                <TableHead className="text-right">{t('common.actions')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -87,7 +89,7 @@ export function StockTable({ products, onUpdateStock }: StockTableProps) {
                           size="icon-sm"
                           variant="ghost"
                           onClick={() => handleSave(product.id)}
-                          aria-label="Salvar"
+                          aria-label={t('actions.save')}
                         >
                           <Check className="h-4 w-4 text-green-600" />
                         </Button>
@@ -95,7 +97,7 @@ export function StockTable({ products, onUpdateStock }: StockTableProps) {
                           size="icon-sm"
                           variant="ghost"
                           onClick={handleCancel}
-                          aria-label="Cancelar"
+                          aria-label={t('actions.cancel')}
                         >
                           <X className="h-4 w-4 text-red-600" />
                         </Button>
@@ -107,7 +109,7 @@ export function StockTable({ products, onUpdateStock }: StockTableProps) {
                         onClick={() => handleEdit(product)}
                       >
                         <Pencil className="h-4 w-4 mr-1" />
-                        Editar estoque
+                        {t('actions.editStock')}
                       </Button>
                     )}
                   </TableCell>

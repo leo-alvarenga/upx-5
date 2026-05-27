@@ -1,7 +1,6 @@
-import ptBR from "../lib/i18n/pt_BR";
+import { useTranslation } from 'react-i18next'
 
 export function useText() {
-  return {
-    t: (key: string) => ptBR[key] || key,
-  };
+  const { t } = useTranslation()
+  return { t }
 }
