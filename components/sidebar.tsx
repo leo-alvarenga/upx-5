@@ -1,6 +1,6 @@
 'use client'
 
-import { Package, Users, ShoppingBag, Warehouse, UserPlus } from 'lucide-react'
+import { Package, Users, ShoppingBag, Warehouse, UserPlus, ArrowLeftRight, History } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { ViewType } from '@/lib/types'
 
@@ -10,6 +10,8 @@ interface SidebarProps {
 }
 
 const navItems: { view: ViewType; label: string; icon: React.ElementType }[] = [
+  { view: 'registrar-saida-entrada', label: 'Registrar Saída ou Entrada', icon: ArrowLeftRight },
+  { view: 'historico-movimentos', label: 'Histórico de Movimentos', icon: History },
   { view: 'gerenciar-estoque', label: 'Gerenciar Estoque', icon: Warehouse },
   { view: 'produtos', label: 'Produtos', icon: ShoppingBag },
   { view: 'cadastrar-produto', label: 'Cadastrar Produto', icon: Package },

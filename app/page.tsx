@@ -7,12 +7,27 @@ import { CustomerForm } from '@/components/customer-form'
 import { ProductsTable } from '@/components/products-table'
 import { CustomersTable } from '@/components/customers-table'
 import { StockTable } from '@/components/stock-table'
+import { ProductMovementForm } from '@/components/product-movement-form'
+import { ProductMovementHistory } from '@/components/product-movement-history'
 import { useLocalStorage } from '@/hooks/use-local-storage'
 import type { ViewType } from '@/lib/types'
 
 export default function HomePage() {
-  const [currentView, setCurrentView] = useState<ViewType>('gerenciar-estoque')
-  const { products, customers, isLoaded, addProduct, updateProductStock, updateProduct, deleteProduct, addCustomer, updateCustomer, deleteCustomer } = useLocalStorage()
+  const [currentView, setCurrentView] = useState<ViewType>('registrar-saida-entrada')
+  const {
+    products,
+    customers,
+    movements,
+    isLoaded,
+    addProduct,
+    updateProductStock,
+    updateProduct,
+    deleteProduct,
+    addCustomer,
+    updateCustomer,
+    deleteCustomer,
+    addMovement,
+  } = useLocalStorage()
 
   const renderContent = () => {
     if (!isLoaded) {
@@ -24,14 +39,36 @@ export default function HomePage() {
     }
 
     switch (currentView) {
+      case 'registrar-saida-entrada':
+        return (
+          <ProductMovementForm
+            products={products}
+            customers={customers}
+            onSubmit={addMovement}
+          />
+        )
+      case 'historico-movimentos':
+        return <ProductMovementHistory movements={movements} />
       case 'cadastrar-produto':
         return <ProductForm onSubmit={addProduct} />
       case 'cadastrar-cliente':
         return <CustomerForm onSubmit={addCustomer} />
       case 'produtos':
-        return <ProductsTable products={products} onUpdateProduct={updateProduct} onDeleteProduct={deleteProduct} />
+        return (
+          <ProductsTable
+            products={products}
+            onUpdateProduct={updateProduct}
+            onDeleteProduct={deleteProduct}
+          />
+        )
       case 'clientes':
-        return <CustomersTable customers={customers} onUpdateCustomer={updateCustomer} onDeleteCustomer={deleteCustomer} />
+        return (
+          <CustomersTable
+            customers={customers}
+            onUpdateCustomer={updateCustomer}
+            onDeleteCustomer={deleteCustomer}
+          />
+        )
       case 'gerenciar-estoque':
         return <StockTable products={products} onUpdateStock={updateProductStock} />
       default:
@@ -41,6 +78,10 @@ export default function HomePage() {
 
   const getPageTitle = () => {
     switch (currentView) {
+      case 'registrar-saida-entrada':
+        return 'Registrar Saída ou Entrada'
+      case 'historico-movimentos':
+        return 'Histórico de Movimentos'
       case 'cadastrar-produto':
         return 'Cadastrar Produto'
       case 'cadastrar-cliente':

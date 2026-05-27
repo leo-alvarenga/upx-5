@@ -1,7 +1,8 @@
 export interface Product {
   id: string
   nome: string
-  preco: number
+  precoCusto: number
+  precoVenda: number
   marca: string
   fornecedor: string
   qtdVendida: number
@@ -16,4 +17,30 @@ export interface Customer {
   endereco: string
 }
 
-export type ViewType = 'cadastrar-produto' | 'produtos' | 'gerenciar-estoque' | 'cadastrar-cliente' | 'clientes'
+export type MovementType = 'venda' | 'devolucao' | 'entrada' | 'outro'
+
+export interface ProductMovementItem {
+  productId: string
+  productNome: string
+  quantidade: number
+  precoVendaNoMomento: number
+}
+
+export interface ProductMovement {
+  id: string
+  tipo: MovementType
+  items: ProductMovementItem[]
+  customerId?: string
+  customerNome?: string
+  observacao?: string
+  createdAt: string
+}
+
+export type ViewType =
+  | 'registrar-saida-entrada'
+  | 'historico-movimentos'
+  | 'gerenciar-estoque'
+  | 'produtos'
+  | 'cadastrar-produto'
+  | 'clientes'
+  | 'cadastrar-cliente'

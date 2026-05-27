@@ -14,7 +14,8 @@ interface ProductFormProps {
 export function ProductForm({ onSubmit }: ProductFormProps) {
   const [formData, setFormData] = useState({
     nome: '',
-    preco: '',
+    precoCusto: '',
+    precoVenda: '',
     marca: '',
     fornecedor: '',
   })
@@ -22,16 +23,17 @@ export function ProductForm({ onSubmit }: ProductFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!formData.nome || !formData.preco || !formData.marca || !formData.fornecedor) return
+    if (!formData.nome || !formData.precoCusto || !formData.precoVenda || !formData.marca || !formData.fornecedor) return
 
     onSubmit({
       nome: formData.nome,
-      preco: parseFloat(formData.preco),
+      precoCusto: parseFloat(formData.precoCusto),
+      precoVenda: parseFloat(formData.precoVenda),
       marca: formData.marca,
       fornecedor: formData.fornecedor,
     })
 
-    setFormData({ nome: '', preco: '', marca: '', fornecedor: '' })
+    setFormData({ nome: '', precoCusto: '', precoVenda: '', marca: '', fornecedor: '' })
     setSuccess(true)
     setTimeout(() => setSuccess(false), 3000)
   }
@@ -56,18 +58,33 @@ export function ProductForm({ onSubmit }: ProductFormProps) {
               required
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="preco">Preço (R$)</Label>
-            <Input
-              id="preco"
-              type="number"
-              step="0.01"
-              min="0"
-              placeholder="Ex: 49.90"
-              value={formData.preco}
-              onChange={(e) => setFormData(prev => ({ ...prev, preco: e.target.value }))}
-              required
-            />
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="precoCusto">Preço de Custo (R$)</Label>
+              <Input
+                id="precoCusto"
+                type="number"
+                step="0.01"
+                min="0"
+                placeholder="Ex: 25.00"
+                value={formData.precoCusto}
+                onChange={(e) => setFormData(prev => ({ ...prev, precoCusto: e.target.value }))}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="precoVenda">Preço de Venda (R$)</Label>
+              <Input
+                id="precoVenda"
+                type="number"
+                step="0.01"
+                min="0"
+                placeholder="Ex: 49.90"
+                value={formData.precoVenda}
+                onChange={(e) => setFormData(prev => ({ ...prev, precoVenda: e.target.value }))}
+                required
+              />
+            </div>
           </div>
           <div className="space-y-2">
             <Label htmlFor="marca">Marca</Label>
